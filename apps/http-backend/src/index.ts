@@ -1,7 +1,9 @@
 import express from "express"
 import  jwt  from "jsonwebtoken";
-import { JWT_SECRET } from "./config";
+import { JWT_SECRET } from "@repo/backend-common/config";
 import { middleware } from "./middleware";
+
+import {CreateUserSchema} from "@repo/common/types"
 const app=express();
 
 
@@ -22,8 +24,13 @@ app.post('signin',function(req,res){
 
 
 app.post('signup',function(req,res){
-    const username=req.body.data;
-    const passowrd=req.body.data;
+    
+    const data=CreateUserSchema.safeParse(req.body);
+    if(!data.success){
+        return res.json({
+            message:"Incorrect inputs"
+        })
+    }
 
     res.json({
         message:"signup room"
